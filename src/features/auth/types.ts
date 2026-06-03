@@ -27,3 +27,18 @@ export interface RegisterPayload {
   password: string;
   role?: Role;
 }
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+export interface ApiErrorResponse {
+  success: boolean;
+  error: {
+    status: number;
+    message: string;
+    details?: any;
+  };
+}

@@ -11,11 +11,14 @@ import { AssignmentCard } from "@/features/assignments/components/assignment-car
 import { AssignmentDialog } from "@/features/assignments/components/assignment-dialog";
 import { DeleteAssignmentDialog } from "@/features/assignments/components/delete-assignment-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TaskList } from "@/features/tasks/components/task-list";
 import {
-  ChevronLeft,
-  AlertCircle,
-  Plus,
-} from "lucide-react";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ChevronLeft, AlertCircle, Plus } from "lucide-react";
 import Image from "next/image";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -128,7 +131,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center max-w-md mx-auto min-h-[50vh]">
         <AlertCircle className="w-12 h-12 text-destructive mb-4" />
-        <h3 className="text-lg font-bold text-foreground">Failed to load project</h3>
+        <h3 className="text-lg font-bold text-foreground">
+          Failed to load project
+        </h3>
         <p className="text-sm text-muted-foreground mt-1">
           {pageError || "Project details could not be found."}
         </p>
@@ -136,9 +141,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           <Button variant="outline" onClick={() => router.push("/projects")}>
             Go Back
           </Button>
-          <Button onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
         </div>
       </div>
     );
@@ -174,13 +177,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <div className="border border-border rounded-lg p-6 bg-card">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              {project.name}
+            </h1>
             <p className="text-xs text-muted-foreground mt-1">
-              Created on {formatDate(project.createdAt)} by {project.user?.name || "Admin"}
+              Created on {formatDate(project.createdAt)} by{" "}
+              {project.user?.name || "Admin"}
             </p>
           </div>
           {isAdmin && (
-            <Button onClick={handleAddAssignmentClick} className="flex items-center gap-1">
+            <Button
+              onClick={handleAddAssignmentClick}
+              className="flex items-center gap-1"
+            >
               <Plus className="w-4 h-4" /> Add Assignment
             </Button>
           )}
@@ -201,25 +210,43 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
         {assignments.length === 0 ? (
           <div className="text-center py-8 border border-dashed border-border rounded-lg bg-muted/20">
-            <p className="text-sm text-muted-foreground">No assignments found for this project.</p>
+            <p className="text-sm text-muted-foreground">
+              No assignments found for this project.
+            </p>
             {isAdmin && (
-              <Button onClick={handleAddAssignmentClick} className="mt-3 flex items-center gap-1 mx-auto">
+              <Button
+                onClick={handleAddAssignmentClick}
+                className="mt-3 flex items-center gap-1 mx-auto"
+              >
                 <Plus className="w-4 h-4" /> Create First Assignment
               </Button>
             )}
           </div>
         ) : (
-          <div className="space-y-3">
+          <Accordion
+            multiple
+            className="w-full space-y-4 border-none bg-transparent"
+          >
             {assignments.map((assignment) => (
-              <AssignmentCard
+              <AccordionItem
                 key={assignment.id}
-                assignment={assignment}
-                isAdmin={isAdmin}
-                onEdit={() => handleEditAssignment(assignment)}
-                onDelete={() => handleDeleteAssignmentClick(assignment)}
-              />
+                value={assignment.id}
+                className="border-none"
+              >
+                <AccordionTrigger className="p-0 hover:no-underline w-full text-left font-normal border-none flex items-center relative [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 [&>svg]:size-5 [&>svg]:text-muted-foreground [&>svg]:pointer-events-none [&>svg]:transition-transform [&>svg]:duration-200">
+                  <AssignmentCard
+                    assignment={assignment}
+                    isAdmin={isAdmin}
+                    onEdit={() => handleEditAssignment(assignment)}
+                    onDelete={() => handleDeleteAssignmentClick(assignment)}
+                  />
+                </AccordionTrigger>
+                <AccordionContent className="p-0 mt-2">
+                  <TaskList assignmentId={assignment.id} />
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         )}
       </div>
 
@@ -233,7 +260,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         updateAssignmentFn={updateAssignment}
       />
 
-      {/* Assignment Delete Confirm Dialog */}
+      {/* Assignment Delete Dialog */}
       <DeleteAssignmentDialog
         isOpen={isDeleteOpen}
         assignmentName={assignmentToDelete?.name || ""}
@@ -244,4 +271,3 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     </div>
   );
 }
-

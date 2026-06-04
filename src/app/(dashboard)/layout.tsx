@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
+import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import {
@@ -29,7 +30,7 @@ export default function DashboardLayout({
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/dashboard">
+                  <BreadcrumbLink render={<Link href="/dashboard" />}>
                     Dashboard
                   </BreadcrumbLink>
                 </BreadcrumbItem>

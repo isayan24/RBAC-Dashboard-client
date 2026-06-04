@@ -14,11 +14,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import {
-  GalleryVerticalEndIcon,
-  LayoutDashboard,
-  Folder,
-} from "lucide-react";
+import { GalleryVerticalEndIcon, LayoutDashboard, Folder } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useUser();
@@ -59,8 +55,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex h-16 items-center justify-center border-b px-4">
         <div className="flex w-full items-center gap-2 font-semibold text-sidebar-foreground">
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
-            <GalleryVerticalEndIcon className="size-4" />
+          <div className="flex aspect-square size-6 items-center justify-center rounded-lg bg-yellow-700 text-primary-foreground shrink-0">
+            <GalleryVerticalEndIcon className="size-3.5" />
           </div>
           <span className="truncate group-data-[collapsible=icon]:hidden">
             RBAC Manager

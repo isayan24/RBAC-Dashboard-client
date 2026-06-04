@@ -18,7 +18,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ChevronLeft, AlertCircle, Plus } from "lucide-react";
+import {
+  ChevronLeft,
+  AlertCircle,
+  Plus,
+  Loader2,
+} from "lucide-react";
 import Image from "next/image";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -208,7 +213,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           Assignments ({assignments.length})
         </h3>
 
-        {assignments.length === 0 ? (
+        {assignmentsLoading && assignments.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Loader2 className="w-6 h-6 text-primary animate-spin mb-2" />
+            <p className="text-sm text-muted-foreground">Loading assignments...</p>
+          </div>
+        ) : assignments.length === 0 ? (
           <div className="text-center py-8 border border-dashed border-border rounded-lg bg-muted/20">
             <p className="text-sm text-muted-foreground">
               No assignments found for this project.

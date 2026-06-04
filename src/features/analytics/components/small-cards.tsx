@@ -15,7 +15,7 @@ export function SmallCards({ summary }: SmallCardsProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* Total Projects Card */}
-      <div className="border border-border/80 bg-card rounded-xl p-6 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
+      <div className="border border-border/80 bg-card rounded-xl p-2 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium text-muted-foreground">
             Total Projects
@@ -42,7 +42,7 @@ export function SmallCards({ summary }: SmallCardsProps) {
       </div>
 
       {/* Total Assignments Card */}
-      <div className="border border-border/80 bg-card rounded-xl p-6 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
+      <div className="border border-border/80 bg-card rounded-xl p-4 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium text-muted-foreground">
             Total Assignments
@@ -62,7 +62,7 @@ export function SmallCards({ summary }: SmallCardsProps) {
       </div>
 
       {/* Total Tasks Card */}
-      <div className="border border-border/80 bg-card rounded-xl p-6 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
+      <div className="border border-border/80 bg-card rounded-xl p-1 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium text-muted-foreground">
             Total Tasks
@@ -85,7 +85,7 @@ export function SmallCards({ summary }: SmallCardsProps) {
       </div>
 
       {/* Overall Completion Card */}
-      <div className="border border-border/80 bg-card rounded-xl p-6 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
+      <div className="border border-border/80 bg-card rounded-xl p-2 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-border">
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium text-muted-foreground">
             Overall Completion

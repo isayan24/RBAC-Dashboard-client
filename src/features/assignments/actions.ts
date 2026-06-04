@@ -23,6 +23,7 @@ export async function getAllAssignments(params: {
   projectId?: string;
   userId?: string;
   search?: string;
+  taskStatus?: string;
 }) {
   const response = await API.get("/assignment", { params });
   return response.data;

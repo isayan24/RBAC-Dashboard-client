@@ -12,13 +12,18 @@ export const useAssignments = (projectId: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isMutating, setIsMutating] = useState(false);
+  const [taskStatus, setTaskStatus] = useState<string>("");
 
   const fetchAssignments = useCallback(async () => {
     if (!projectId) return;
     setLoading(true);
     setError("");
     try {
-      const res = await getAllAssignments({ projectId });
+      const params: { projectId: string; taskStatus?: string } = { projectId };
+      if (taskStatus && taskStatus !== "ALL") {
+        params.taskStatus = taskStatus;
+      }
+      const res = await getAllAssignments(params);
       if (res.success && res.data) {
         setAssignments(res.data.assignments || []);
       } else {
@@ -29,7 +34,7 @@ export const useAssignments = (projectId: string) => {
     } finally {
       setLoading(false);
     }
-  }, [projectId]);
+  }, [projectId, taskStatus]);
 
   useEffect(() => {
     fetchAssignments();
@@ -97,6 +102,8 @@ export const useAssignments = (projectId: string) => {
     loading,
     error,
     isMutating,
+    taskStatus,
+    setTaskStatus,
     refresh: fetchAssignments,
     create,
     update,

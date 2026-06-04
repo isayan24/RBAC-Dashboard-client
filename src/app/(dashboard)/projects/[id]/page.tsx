@@ -7,23 +7,11 @@ import { useUser } from "@/features/auth/hooks/useUser";
 import { useProject } from "@/features/projects/hooks/useProject";
 import { useAssignments } from "@/features/assignments/hooks/useAssignments";
 import { Assignment } from "@/features/assignments/types";
-import { AssignmentCard } from "@/features/assignments/components/assignment-card";
 import { AssignmentDialog } from "@/features/assignments/components/assignment-dialog";
 import { DeleteAssignmentDialog } from "@/features/assignments/components/delete-assignment-dialog";
+import { AssignmentList } from "@/features/assignments/components/assignment-list";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TaskList } from "@/features/tasks/components/task-list";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  ChevronLeft,
-  AlertCircle,
-  Plus,
-  Loader2,
-} from "lucide-react";
+import { ChevronLeft, AlertCircle, Plus } from "lucide-react";
 import Image from "next/image";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -40,6 +28,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     assignments,
     loading: assignmentsLoading,
     error: assignmentsError,
+    taskStatus,
+    setTaskStatus,
     create: createAssignment,
     update: updateAssignment,
     remove: removeAssignment,
@@ -112,44 +102,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const pageError = projectError || assignmentsError;
 
   if (pageLoading && !project) {
-    return (
-      <div className="space-y-6 py-4">
-        <div className="h-4 w-20 bg-muted animate-pulse rounded" />
-        <div className="border border-border rounded-lg p-6 space-y-4 bg-card">
-          <Skeleton className="h-8 w-1/3" />
-          <Skeleton className="h-4 w-1/2" />
-          <div className="border-t border-border pt-4 space-y-2">
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-4 w-2/3" />
-          </div>
-        </div>
-        <div className="space-y-3">
-          <Skeleton className="h-6 w-32" />
-          <Skeleton className="h-16 w-full rounded-lg" />
-          <Skeleton className="h-16 w-full rounded-lg" />
-        </div>
-      </div>
-    );
+    return <SkeletonState />;
   }
 
   if (pageError || !project) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center max-w-md mx-auto min-h-[50vh]">
-        <AlertCircle className="w-12 h-12 text-destructive mb-4" />
-        <h3 className="text-lg font-bold text-foreground">
-          Failed to load project
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          {pageError || "Project details could not be found."}
-        </p>
-        <div className="flex gap-2 mt-6">
-          <Button variant="outline" onClick={() => router.push("/projects")}>
-            Go Back
-          </Button>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
-        </div>
-      </div>
-    );
+    return <ErrorState pageError={pageError} router={router} />;
   }
 
   return (
@@ -208,57 +165,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       {/* Assignments Section */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold border-b border-border pb-2 text-foreground">
-          Assignments ({assignments.length})
-        </h3>
-
-        {assignmentsLoading && assignments.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Loader2 className="w-6 h-6 text-primary animate-spin mb-2" />
-            <p className="text-sm text-muted-foreground">Loading assignments...</p>
-          </div>
-        ) : assignments.length === 0 ? (
-          <div className="text-center py-8 border border-dashed border-border rounded-lg bg-muted/20">
-            <p className="text-sm text-muted-foreground">
-              No assignments found for this project.
-            </p>
-            {isAdmin && (
-              <Button
-                onClick={handleAddAssignmentClick}
-                className="mt-3 flex items-center gap-1 mx-auto"
-              >
-                <Plus className="w-4 h-4" /> Create First Assignment
-              </Button>
-            )}
-          </div>
-        ) : (
-          <Accordion
-            multiple
-            className="w-full space-y-4 border-none bg-transparent"
-          >
-            {assignments.map((assignment) => (
-              <AccordionItem
-                key={assignment.id}
-                value={assignment.id}
-                className="border-none"
-              >
-                <AccordionTrigger className="p-0 hover:no-underline w-full text-left font-normal border-none flex items-center relative [&>svg]:absolute [&>svg]:right-4 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2 [&>svg]:size-5 [&>svg]:text-muted-foreground [&>svg]:pointer-events-none [&>svg]:transition-transform [&>svg]:duration-200">
-                  <AssignmentCard
-                    assignment={assignment}
-                    isAdmin={isAdmin}
-                    onEdit={() => handleEditAssignment(assignment)}
-                    onDelete={() => handleDeleteAssignmentClick(assignment)}
-                  />
-                </AccordionTrigger>
-                <AccordionContent className="p-0 mt-2">
-                  <TaskList assignmentId={assignment.id} />
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        )}
-      </div>
+      <AssignmentList
+        assignments={assignments}
+        assignmentsLoading={assignmentsLoading}
+        taskStatus={taskStatus}
+        setTaskStatus={setTaskStatus}
+        isAdmin={isAdmin}
+        onAddAssignmentClick={handleAddAssignmentClick}
+        onEditAssignment={handleEditAssignment}
+        onDeleteAssignmentClick={handleDeleteAssignmentClick}
+      />
 
       {/* Assignment Add / Edit Dialog */}
       <AssignmentDialog
@@ -281,3 +197,44 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     </div>
   );
 }
+
+const SkeletonState = () => {
+  return (
+    <div className="space-y-6 py-4">
+      <div className="h-4 w-20 bg-muted animate-pulse rounded" />
+      <div className="border border-border rounded-lg p-6 space-y-4 bg-card">
+        <Skeleton className="h-8 w-1/3" />
+        <Skeleton className="h-4 w-1/2" />
+        <div className="border-t border-border pt-4 space-y-2">
+          <Skeleton className="h-4 w-1/4" />
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+      </div>
+      <div className="space-y-3">
+        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-16 w-full rounded-lg" />
+        <Skeleton className="h-16 w-full rounded-lg" />
+      </div>
+    </div>
+  );
+};
+
+const ErrorState = ({ pageError, router }: any) => {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center max-w-md mx-auto min-h-[50vh]">
+      <AlertCircle className="w-12 h-12 text-destructive mb-4" />
+      <h3 className="text-lg font-bold text-foreground">
+        Failed to load project
+      </h3>
+      <p className="text-sm text-muted-foreground mt-1">
+        {pageError || "Project details could not be found."}
+      </p>
+      <div className="flex gap-2 mt-6">
+        <Button variant="outline" onClick={() => router.push("/projects")}>
+          Go Back
+        </Button>
+        <Button onClick={() => window.location.reload()}>Try Again</Button>
+      </div>
+    </div>
+  );
+};

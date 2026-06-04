@@ -43,7 +43,10 @@ export function LoginForm({
         setError(response.message || "Invalid email or password");
       }
     } catch (err: any) {
-      const errMsg = err.response?.data?.error?.message || err.response?.data?.message || err.message;
+      const errMsg =
+        err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        err.message;
       setError(errMsg || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -92,6 +95,18 @@ export function LoginForm({
                 >
                   Staff: staff@gmail.com
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  type="button"
+                  onClick={() => {
+                    setEmail("rony@gmail.com");
+                    setPassword("staffrony");
+                  }}
+                  className="text-xs h-7 px-3 rounded-2xl cursor-pointer"
+                >
+                  Staff: rony@gmail.com
+                </Button>
               </div>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -119,9 +134,6 @@ export function LoginForm({
               <Field>
                 <Button type="submit" disabled={loading}>
                   {loading ? "Logging in..." : "Login"}
-                </Button>
-                <Button variant="outline" type="button" disabled={loading}>
-                  Login with Google
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}

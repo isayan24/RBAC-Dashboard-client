@@ -17,11 +17,17 @@ export async function createProject(data: CreateProjectType) {
   return response.data;
 }
 
-export async function getAllProjects(search?: string) {
+export async function getAllProjects(search?: string, page?: number, limit?: number) {
   const params: any = {};
 
   if (search) {
     params.search = search;
+  }
+  if (page) {
+    params.page = page;
+  }
+  if (limit) {
+    params.limit = limit;
   }
 
   const response = await API.get("/project/all", {

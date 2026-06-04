@@ -18,6 +18,7 @@ export interface Assignment {
   _count?: {
     tasks: number;
   };
+  completionRate?: number;
 }
 
 export interface CreateAssignmentPayload {

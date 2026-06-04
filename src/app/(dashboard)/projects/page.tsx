@@ -11,11 +11,21 @@ import { DeleteProjectDialog } from "@/features/projects/components/delete-proje
 import { deleteProject } from "@/features/projects/actions";
 import { Project } from "@/features/projects/types";
 import { Search, Plus } from "lucide-react";
+import { ProjectsPagination } from "@/features/projects/components/projects-pagination";
 
 export default function Page() {
   const user = useUser();
-  const { projects, loading, error, searchQuery, setSearchQuery, refresh } =
-    useProjects();
+  const {
+    projects,
+    loading,
+    error,
+    searchQuery,
+    setSearchQuery,
+    page,
+    setPage,
+    totalPages,
+    refresh,
+  } = useProjects();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
@@ -116,6 +126,17 @@ export default function Page() {
         onEditProject={handleEditClick}
         onDeleteProject={handleDeleteClick}
       />
+
+      {/* Pagination Controls */}
+      {!loading && !error && totalPages > 1 && (
+        <div className="sticky bottom-0 bg-background/95 py-3.5 mt-6 border-t border-border/80 z-10 -mx-4 px-4 flex justify-center">
+          <ProjectsPagination
+            page={page}
+            totalPages={totalPages}
+            setPage={setPage}
+          />
+        </div>
+      )}
 
       {/* Create / Edit Project Modal */}
       <CreateProjectDialog

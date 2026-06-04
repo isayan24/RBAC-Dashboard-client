@@ -16,10 +16,10 @@ export const useProjects = (initialSearch = "") => {
       if (res.success && res.data) {
         setProjects(res.data.projects || []);
       } else {
-        setError(res.message || "Failed to retrieve projects.");
+        setError(res.message || "Failed to retrieve projec");
       }
     } catch (err: any) {
-      setError(err.message || "An error occurred while fetching projects.");
+      setError(err.message || "An error occurred while fetching projects");
     } finally {
       setLoading(false);
     }

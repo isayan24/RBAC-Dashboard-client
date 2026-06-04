@@ -14,15 +14,9 @@ import { Search, Plus } from "lucide-react";
 
 export default function Page() {
   const user = useUser();
-  const {
-    projects,
-    loading,
-    error,
-    searchQuery,
-    setSearchQuery,
-    refresh,
-  } = useProjects();
-  
+  const { projects, loading, error, searchQuery, setSearchQuery, refresh } =
+    useProjects();
+
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
 
@@ -30,7 +24,7 @@ export default function Page() {
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const canCreate = user?.role === "ADMIN" || user?.role === "STAFF";
+  const canCreate = user?.role === "ADMIN";
   const isAdmin = user?.role === "ADMIN";
 
   const handleEditClick = (project: Project) => {
@@ -77,12 +71,14 @@ export default function Page() {
       {/* Header and Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Projects</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Projects
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage, assign, and track all role-based projects here.
+            Manage, assign, and track all projects
           </p>
         </div>
-        
+
         {canCreate && (
           <Button
             onClick={handleCreateClick}

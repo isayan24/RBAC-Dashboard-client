@@ -40,3 +40,8 @@ export async function refreshSession() {
 
   return response.data;
 }
+
+export async function getUsers() {
+  const response = await API.get("/auth/users/all");
+  return response.data;
+}

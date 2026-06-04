@@ -1,7 +1,7 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Project } from "../types";
 import { Folder, Calendar, Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
 
 interface ProjectCardProps {
   project: Project;
@@ -16,6 +16,8 @@ export function ProjectCard({
   onEdit,
   onDelete,
 }: ProjectCardProps) {
+  const router = useRouter();
+
   const formatDate = (dateStr: string) => {
     try {
       return new Date(dateStr).toLocaleDateString(undefined, {
@@ -29,15 +31,16 @@ export function ProjectCard({
   };
 
   return (
-    <div className="flex flex-row items-center gap-4 border border-border bg-card rounded-xl p-4 transition-colors hover:bg-accent/40">
+    <div
+      onClick={() => router.push(`/projects/${project.id}`)}
+      className="flex flex-row items-center gap-4 border border-border bg-card rounded-xl p-4 transition-colors hover:bg-accent/40 cursor-pointer"
+    >
       {/* Left: Image */}
       <div className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-lg overflow-hidden bg-muted relative">
         {project.image ? (
-          <Image
+          <img
             src={project.image}
             alt={project.name}
-            width={300}
-            height={300}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -57,9 +60,7 @@ export function ProjectCard({
         </p>
         {project.user && (
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-            <span className="font-medium text-foreground">
-              {project.user.name}
-            </span>
+            <span className="font-medium text-foreground">{project.user.name}</span>
             <span>•</span>
             <span className="uppercase tracking-wider text-[10px] bg-muted px-1.5 py-0.5 rounded font-semibold">
               {project.user.role || "Staff"}
@@ -74,7 +75,7 @@ export function ProjectCard({
           <Calendar className="w-3.5 h-3.5" />
           <span>{formatDate(project.createdAt)}</span>
         </div>
-
+        
         {isAdmin && (
           <div className="flex items-center gap-2 mt-1">
             <button

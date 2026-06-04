@@ -12,32 +12,31 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface DeleteProjectDialogProps {
+interface DeleteAssignmentDialogProps {
   isOpen: boolean;
-  projectName: string;
+  assignmentName: string;
   onConfirm: () => void;
   onClose: () => void;
   loading: boolean;
 }
 
-export function DeleteProjectDialog({
+export function DeleteAssignmentDialog({
   isOpen,
-  projectName,
+  assignmentName,
   onConfirm,
   onClose,
   loading,
-}: DeleteProjectDialogProps) {
+}: DeleteAssignmentDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent showCloseButton={!loading}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="w-5 h-5" />
-            Delete Project
+            Delete Assignment
           </DialogTitle>
           <DialogDescription className="pt-2">
-            Are you sure you want to delete {projectName}? All the assignments
-            will be deleted as well.
+            Are you sure you want to delete <span className="font-semibold text-foreground">{assignmentName}</span>? This action is permanent and will delete all associated tasks assigned to it.
           </DialogDescription>
         </DialogHeader>
 
@@ -63,7 +62,7 @@ export function DeleteProjectDialog({
                 Deleting...
               </>
             ) : (
-              "Delete Project"
+              "Delete Assignment"
             )}
           </Button>
         </DialogFooter>

@@ -51,7 +51,8 @@ export function SignupForm({ className, ...props }: React.ComponentProps<typeof 
         setError(response.message || "Failed to create account")
       }
     } catch (err: any) {
-      setError(err.message || "An error occurred. Please try again.")
+      const errMsg = err.response?.data?.error?.message || err.response?.data?.message || err.message;
+      setError(errMsg || "An error occurred. Please try again.")
     } finally {
       setLoading(false)
     }

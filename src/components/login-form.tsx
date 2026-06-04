@@ -43,7 +43,8 @@ export function LoginForm({
         setError(response.message || "Invalid email or password");
       }
     } catch (err: any) {
-      setError(err.message || "An error occurred. Please try again.");
+      const errMsg = err.response?.data?.error?.message || err.response?.data?.message || err.message;
+      setError(errMsg || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }

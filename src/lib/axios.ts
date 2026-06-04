@@ -1,11 +1,14 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: process.env.BACKEND_API || "http://localhost:5000/api",
+  baseURL:
+    process.env.NEXT_PUBLIC_BACKEND_API ||
+    process.env.BACKEND_API ||
+    "http://localhost:5000/api",
   withCredentials: true,
 });
 
-// Request interceptor to automatically add the Authorization header
+// automatically add the Authorization header
 API.interceptors.request.use(
   (config) => {
     const token =

@@ -1,39 +1,42 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { registerUser } from "@/features/auth/actions"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { registerUser } from "@/features/auth/actions";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
-export function SignupForm({ className, ...props }: React.ComponentProps<typeof Card>) {
-  const router = useRouter()
-  const [name, setName] = useState("")
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [role, setRole] = useState<"ADMIN" | "STAFF">("STAFF")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
+export function SignupForm({
+  className,
+  ...props
+}: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"ADMIN" | "STAFF">("STAFF");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
       const response = await registerUser({
@@ -42,28 +45,31 @@ export function SignupForm({ className, ...props }: React.ComponentProps<typeof 
         email,
         password,
         role,
-      })
+      });
 
       if (response.success) {
         // Redirect to login page on success
-        router.push("/login")
+        router.push("/login");
       } else {
-        setError(response.message || "Failed to create account")
+        setError(response.message || "Failed to create account");
       }
     } catch (err: any) {
-      const errMsg = err.response?.data?.error?.message || err.response?.data?.message || err.message;
-      setError(errMsg || "An error occurred. Please try again.")
+      const errMsg =
+        err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        err.message;
+      setError(errMsg || "An error occurred. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Card className={cn(className)} {...props}>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
-          Enter your information below to create your account
+          Enter your information below to create account
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -106,10 +112,6 @@ export function SignupForm({ className, ...props }: React.ComponentProps<typeof 
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <FieldDescription>
-                We&apos;ll use this to contact you. We will not share your email
-                with anyone else.
-              </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="role">Role</FieldLabel>
@@ -151,5 +153,5 @@ export function SignupForm({ className, ...props }: React.ComponentProps<typeof 
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

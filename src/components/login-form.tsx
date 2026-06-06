@@ -59,7 +59,7 @@ export function LoginForm({
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter email or choose pre-defined one to login to dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
